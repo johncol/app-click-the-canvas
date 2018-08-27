@@ -1,0 +1,17 @@
+{
+  "name": "doktor24-assignment",
+  "version": "1.0.0",
+  "description": "Toy application to draw parallelograms and generate circles",
+  "main": "main.ts",
+  "scripts": {
+    "start": "parcel index.html"
+  },
+  "author": "John Cely",
+  "license": "ISC",
+  "devDependencies": {
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.10.0",
+    "parcel": "1.9.7",
+    "typescript": "^3.0.1"
+  }
+}
