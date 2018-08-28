@@ -1,28 +1,20 @@
 import { Point } from './domain/point';
 import { Line } from './domain/line';
 import { Parallelogram } from './domain/parallelogram';
-
-function findLine(point1: Point, point2: Point): Line {
-  if (point1.isEqualTo(point2)) {
-    throw new Error('Points cannot be equal');
-  }
-  const m: number = (point1.y - point2.y) / (point1.x - point2.x);
-  const b: number = point1.y - (point1.x * m);
-  return new Line(m, b);
-}
-
-function findIntersection(line1: Line, line2: Line): Point {
-  if (line1.isParellelTo(line2)) {
-    throw new Error('Lines cannot be parallell');
-  }
-  const x: number = (line2.b - line1.b) / (line1.m - line2.m);
-  const y: number = (line1.m * x) + line1.b;
-  return new Point(x, y);
-}
+import { Circle } from './domain/circle';
 
 function findParallelogram(point1: Point, point2: Point, point3: Point): Parallelogram {
-  const line1: Line = findLine(point1, point2);
-  const line2: Line = findLine(point1, point3);
-  const point4: Point = findIntersection(line1, line2);
-  return { point1, point2, point3, point4 };
+  const line1: Line = Line.givenPoints(point1, point2);
+  const line2: Line = Line.givenPoints(point1, point3);
+  const point4: Point = line1.getIntersectionPointWith(line2);
+  return new Parallelogram(point1, point2, point3, point4);
+}
+
+function getCircleRadious(circleArea: number): number {
+  return Math.sqrt(circleArea / Math.PI);
+}
+
+function go(point1: Point, point2: Point, point3: Point): void {
+  const parallelogram: Parallelogram = findParallelogram(point1, point2, point3);
+  const circle: Circle = new Circle(parallelogram.centerOfMass, getCircleRadious(parallelogram.area));
 }
