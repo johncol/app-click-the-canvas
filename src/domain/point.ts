@@ -1,4 +1,5 @@
 export class Point {
+
   constructor(
     public readonly x: number,
     public readonly y: number,
@@ -12,5 +13,9 @@ export class Point {
     const deltaX: number = this.x - otherPoint.x;
     const deltaY: number = this.y - otherPoint.y;
     return Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
+  }
+
+  toString(): string {
+    return `(${this.x}, ${this.y})`;
   }
 }

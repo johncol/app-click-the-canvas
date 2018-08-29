@@ -2,6 +2,7 @@ import { Point } from './point';
 import { Line } from './line';
 
 export class Parallelogram {
+
   public readonly centerOfMass: Point = this.findCenterOfMass();
   public readonly area: number = this.calculateArea();
 
@@ -11,6 +12,19 @@ export class Parallelogram {
     public readonly point3: Point,
     public readonly point4: Point,
   ) { }
+
+  static givenThreePoints(point1: Point, point2: Point, point3: Point): Parallelogram {
+    const line1: Line = Line.givenPoints(point1, point2);
+    const line2: Line = Line.givenPoints(point1, point3);
+    const parallelToLine1: Line = line1.getParallelLineAtPoint(point3);
+    const parallelToLine2: Line = line2.getParallelLineAtPoint(point2);
+    const point4: Point = parallelToLine1.getIntersectionPointWith(parallelToLine2);
+    return new Parallelogram(point1, point2, point3, point4);
+  }
+
+  get points(): Point[] {
+    return [this.point1, this.point2, this.point4, this.point3];
+  }
 
   private findCenterOfMass(): Point {
     const diagonal1: Line = Line.givenPoints(this.point1, this.point4);

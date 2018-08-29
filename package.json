@@ -13,5 +13,9 @@
     "tslint-config-airbnb": "^5.10.0",
     "parcel": "1.9.7",
     "typescript": "^3.0.1"
+  },
+  "dependencies": {
+    "@types/fabric": "^1.5.40",
+    "fabric": "^2.3.6"
   }
 }
