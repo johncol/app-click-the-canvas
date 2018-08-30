@@ -1,6 +1,6 @@
 export const settings = {
   color: {
-    white: '#fafafa',
+    white: '#d6d6d6',
     red: '#be3e2b',
     blue: '#34738f',
     yellow: '#f6de6c',

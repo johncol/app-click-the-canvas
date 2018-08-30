@@ -1,11 +1,10 @@
+import { IEvent } from 'fabric/fabric-impl';
 import { fabric } from 'fabric';
+import { Observable } from 'rxjs';
 
-import { CanvasStore } from './canvas-store';
-
-import { Point } from '../domain/point';
 import { settings } from '../config/settings';
-import { Parallelogram } from '../domain/parallelogram';
-import { Circle } from '../domain/circle';
+import { CanvasStore } from './canvas-store';
+import { Point, Parallelogram, Circle } from '../domain';
 
 export class Painter {
   public readonly canvas: fabric.Canvas;
@@ -14,10 +13,11 @@ export class Painter {
     this.canvas = new fabric.Canvas(canvasId, {
       selection: false,
       backgroundColor: settings.color.white,
-      width: window.innerWidth,
-      height: window.innerHeight
+      height: window.innerHeight,
+      width: window.innerWidth
     } as any);
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
+    window.addEventListener('resize', () => this.canvas.setWidth(window.innerWidth));
   }
 
   paint(entity: Point | Parallelogram | Circle): void {
@@ -51,6 +51,15 @@ export class Painter {
       selectable: false,
     });
     this.addToCanvas(line);
+  }
+
+  onCanvasClicked(): Observable<Point> {
+    return new Observable(observer => {
+      this.canvas.on('mouse:up', (event: IEvent) => {
+        const mouseEvent: MouseEvent = event.e as MouseEvent;
+        observer.next(new Point(mouseEvent.x, mouseEvent.y));
+      });
+    });
   }
 
   private paintPoint(point: Point): void {

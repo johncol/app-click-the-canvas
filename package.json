@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@types/fabric": "^1.5.40",
-    "fabric": "^2.3.6"
+    "fabric": "^2.3.6",
+    "rxjs": "^6.2.2"
   }
 }
