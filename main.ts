@@ -36,8 +36,6 @@ function listenAndPaintFirstPoints(amount: number): Promise<Point[]> {
 listenAndPaintFirstPoints(3).then((points: Point[]) => {
   const parallelogram: Parallelogram = Parallelogram.givenThreePoints(points[0], points[1], points[2]);
   const circle: Circle = new Circle(parallelogram.centerOfMass, Circle.getRadiusGivenArea(parallelogram.area));
-  console.log('parallelogram.area:', parallelogram.area);
-  console.log('radius:', Circle.getRadiusGivenArea(parallelogram.area));
   
   painter.paint(parallelogram.point4);
   painter.paint(parallelogram);

@@ -24,7 +24,7 @@ export class Line {
   }
 
   getPerpendicularLineAtPoint(point: Point): Line {
-    const perpedicularLineM: number = 1 / this.m;
+    const perpedicularLineM: number = -1 / this.m;
     const perpedicularLineB: number = point.y - (perpedicularLineM * point.x);
     return new Line(perpedicularLineM, perpedicularLineB);
   }

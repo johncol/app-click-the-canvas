@@ -41,6 +41,18 @@ export class Painter {
     this.canvas.renderAll();
   }
 
+  paintHelperLine(point1: Point, point2: Point, color: string = 'red'): void {
+    const coords: number[] = [point1.x, point1.y, point2.x, point2.y];
+    const line: fabric.Line = new fabric.Line(coords, {
+      fill: color,
+      stroke: color,
+      strokeWidth: 1,
+      hoverCursor: 'default',
+      selectable: false,
+    });
+    this.addToCanvas(line);
+  }
+
   private paintPoint(point: Point): void {
     const circle: fabric.Circle = new fabric.Circle({
       left: point.x,
