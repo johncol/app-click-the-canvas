@@ -16,6 +16,6 @@ export class Point {
   }
 
   toString(): string {
-    return `(${this.x}, ${this.y})`;
+    return `(${this.x.toFixed(1)}, ${this.y.toFixed(1)})`;
   }
 }

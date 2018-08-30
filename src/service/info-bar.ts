@@ -16,7 +16,7 @@ export class InfoBar {
   }
 
   displayAreaInfo(area: number): void {
-    this.addRow('Area', area);
+    this.addRow('Area', area.toFixed(1));
   }
 
   private addRow(field: string, value: any): void {

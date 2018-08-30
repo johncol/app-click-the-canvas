@@ -2,22 +2,23 @@ import { IEvent } from 'fabric/fabric-impl';
 import { fabric } from 'fabric';
 import { Observable } from 'rxjs';
 
-import { settings } from '../config/settings';
+import { settings, pointSettings, circleSettings, lineSettings } from './../config/settings';
 import { CanvasStore } from './canvas-store';
 import { Point, Parallelogram, Circle } from '../domain';
 
 export class Painter {
   public readonly canvas: fabric.Canvas;
+  private readonly canvasProperties = {
+    selection: false,
+    backgroundColor: settings.color.white,
+    height: window.innerHeight,
+    width: window.innerWidth,
+  };
 
   constructor(canvasId: string, private readonly store: CanvasStore) {
-    this.canvas = new fabric.Canvas(canvasId, {
-      selection: false,
-      backgroundColor: settings.color.white,
-      height: window.innerHeight,
-      width: window.innerWidth,
-    } as any);
-    fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
-    window.addEventListener('resize', () => this.canvas.setWidth(window.innerWidth));
+    this.canvas = new fabric.Canvas(canvasId, this.canvasProperties);
+    this.configureCanvasAdditionalSettings();
+    this.updateDimensionOnWindowResize(this.canvas);
   }
 
   paint(entity: Point | Parallelogram | Circle): void {
@@ -41,6 +42,7 @@ export class Painter {
     this.canvas.renderAll();
   }
 
+  // TODO: should/could me removed
   paintHelperLine(point1: Point, point2: Point, color: string = 'red'): void {
     const coords: number[] = [point1.x, point1.y, point2.x, point2.y];
     const line: fabric.Line = new fabric.Line(coords, {
@@ -64,16 +66,10 @@ export class Painter {
 
   private paintPoint(point: Point): void {
     const circle: fabric.Circle = new fabric.Circle({
+      ...pointSettings,
       left: point.x,
       top: point.y,
-      strokeWidth: 1,
-      radius: settings.strokeWidth.point / 2,
-      fill: settings.color.red,
-      stroke: settings.color.red,
-      hoverCursor: 'default',
-      selectable: false,
     });
-    circle.hasControls = circle.hasBorders = false;
     this.store.addPoint(point, circle);
     this.addToCanvas(circle);
   }
@@ -87,34 +83,36 @@ export class Painter {
 
   private paintCircle(circle: Circle): void {
     const fabricCircle: fabric.Circle = new fabric.Circle({
+      ...circleSettings,
       left: circle.center.x,
       top: circle.center.y,
-      strokeWidth: settings.strokeWidth.circle,
       radius: circle.radius,
-      stroke: settings.color.yellow,
-      fill: 'transparent',
-      hoverCursor: 'default',
-      selectable: false,
     });
-    fabricCircle.hasControls = fabricCircle.hasBorders = false;
     this.addToCanvas(fabricCircle);
   }
 
   private paintLineSegment(point1: Point, point2: Point): void {
     const coords: number[] = [point1.x, point1.y, point2.x, point2.y];
-    const line: fabric.Line = new fabric.Line(coords, {
-      fill: settings.color.blue,
-      stroke: settings.color.blue,
-      strokeWidth: settings.strokeWidth.line,
-      hoverCursor: 'default',
-      selectable: false,
-    });
+    const line: fabric.Line = new fabric.Line(coords, { ...lineSettings });
     this.addToCanvas(line);
   }
 
   private addToCanvas(object: fabric.Object): void {
     this.canvas.add(object);
     this.canvas.renderAll();
+  }
+
+  private updateDimensionOnWindowResize(canvas: fabric.Canvas): void {
+    window.addEventListener('resize', () => {
+      canvas.setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    });
+  }
+
+  private configureCanvasAdditionalSettings(): void {
+    fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
   }
 
 }
