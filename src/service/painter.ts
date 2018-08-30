@@ -14,7 +14,7 @@ export class Painter {
       selection: false,
       backgroundColor: settings.color.white,
       height: window.innerHeight,
-      width: window.innerWidth
+      width: window.innerWidth,
     } as any);
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
     window.addEventListener('resize', () => this.canvas.setWidth(window.innerWidth));
@@ -33,7 +33,7 @@ export class Painter {
   }
 
   makePointsSelectable(): void {
-    this.store.forEachPoint(fabricPoint => {
+    this.store.forEachPoint((fabricPoint) => {
       fabricPoint.selectable = true;
       fabricPoint.hoverCursor = 'move';
       fabricPoint.bringToFront();
@@ -54,7 +54,7 @@ export class Painter {
   }
 
   onCanvasClicked(): Observable<Point> {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       this.canvas.on('mouse:up', (event: IEvent) => {
         const mouseEvent: MouseEvent = event.e as MouseEvent;
         observer.next(new Point(mouseEvent.x, mouseEvent.y));
@@ -71,7 +71,7 @@ export class Painter {
       fill: settings.color.red,
       stroke: settings.color.red,
       hoverCursor: 'default',
-      selectable: false
+      selectable: false,
     });
     circle.hasControls = circle.hasBorders = false;
     this.store.addPoint(point, circle);

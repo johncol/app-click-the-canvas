@@ -3,8 +3,8 @@ import { Point } from './point';
 export class Line {
 
   constructor(
-    public readonly m: number, 
-    public readonly b: number
+    public readonly m: number,
+    public readonly b: number,
   ) { }
 
   static givenPoints(point1: Point, point2: Point): Line {

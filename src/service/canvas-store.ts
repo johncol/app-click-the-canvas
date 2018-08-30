@@ -1,8 +1,8 @@
-import { Point } from "../domain/point";
+import { Point } from '../domain/point';
 
 type CanvasPoints = {
-  [point: string]: fabric.Circle
-}
+  [point: string]: fabric.Circle;
+};
 
 export class CanvasStore {
   private readonly points: CanvasPoints = {};
@@ -12,7 +12,7 @@ export class CanvasStore {
   }
 
   forEachPoint(callback: (point: fabric.Circle) => void): void {
-    for (let point in this.points) {
+    for (const point in this.points) {
       callback(this.points[point]);
     }
   }

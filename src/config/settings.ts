@@ -9,5 +9,5 @@ export const settings = {
     point: 11,
     line: 3,
     circle: 3,
-  }
+  },
 };
