@@ -11,23 +11,30 @@ html {
 }
 
 body {
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-family: 'Courier New', Courier, monospace;
+  overflow: hidden;
 }
 
 .main { }
 
 .canvas { }
 
+/*  info bar  */
+
 .info-bar {
   position: absolute;
   top: 0;
   right: 0;
-  width: 250px;
+  width: 300px;
   height: 100vh;
   background-color: #463d5c;
   background-color: #292c2f;
   padding: 20px;
+  color: #ccc;
+  font-size: 15px;
 }
+
+/*  button  */
 
 .btn {
   background-color: #2f7756;
@@ -35,14 +42,17 @@ body {
   border: none;
   outline: none;
   padding: 7px 10px;
-  color: #fff;
   cursor: pointer;
   transition: all 0.2s ease;
-}
-
-.btn--full-width {
-  display: block-inline;
-  width: 100%;
+  width: 260px;
+  position: absolute;
+  bottom: 20px;
+  font-family: inherit;
+  font-size: 16px;
+  color: inherit;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 
 .btn:hover {
@@ -52,3 +62,36 @@ body {
 .btn:active {
   transform: translateY(1px);
 }
+
+/*  table  */
+
+table {
+  width: 100%;
+  border: none;
+  border-collapse: collapse;
+  letter-spacing: 1px;
+  margin-top: 20px;
+}
+
+tr {
+  border-bottom: 1px solid currentColor;
+}
+
+tr:first-child {
+  border-top: 1px solid currentColor;
+}
+
+tr > * {
+  padding: 15px 0;
+}
+
+th {
+  text-align: left;
+  font-weight: normal;
+  text-transform: capitalize;
+}
+
+td {
+  text-align: right;
+}
+
