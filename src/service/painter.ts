@@ -21,18 +21,6 @@ export class Painter {
     this.updateDimensionOnWindowResize(this.canvas);
   }
 
-  paint(entity: Point | Parallelogram | Circle): void {
-    if (entity instanceof Point) {
-      this.paintPoint(entity);
-    }
-    if (entity instanceof Parallelogram) {
-      this.paintParallelogram(entity);
-    }
-    if (entity instanceof Circle) {
-      this.paintCircle(entity);
-    }
-  }
-
   makePointsSelectable(): void {
     this.store.forEachPoint((fabricPoint) => {
       fabricPoint.selectable = true;
@@ -40,19 +28,6 @@ export class Painter {
       fabricPoint.bringToFront();
     });
     this.canvas.renderAll();
-  }
-
-  // TODO: should/could me removed
-  paintHelperLine(point1: Point, point2: Point, color: string = 'red'): void {
-    const coords: number[] = [point1.x, point1.y, point2.x, point2.y];
-    const line: fabric.Line = new fabric.Line(coords, {
-      fill: color,
-      stroke: color,
-      strokeWidth: 1,
-      hoverCursor: 'default',
-      selectable: false,
-    });
-    this.addToCanvas(line);
   }
 
   onCanvasClicked(): Observable<Point> {
@@ -64,7 +39,7 @@ export class Painter {
     });
   }
 
-  private paintPoint(point: Point): void {
+  paintPoint(point: Point): void {
     const circle: fabric.Circle = new fabric.Circle({
       ...pointSettings,
       left: point.x,
@@ -74,14 +49,14 @@ export class Painter {
     this.addToCanvas(circle);
   }
 
-  private paintParallelogram(parallelogram: Parallelogram): void {
+  paintParallelogram(parallelogram: Parallelogram): void {
     this.paintLineSegment(parallelogram.point1, parallelogram.point2);
     this.paintLineSegment(parallelogram.point1, parallelogram.point3);
     this.paintLineSegment(parallelogram.point2, parallelogram.point4);
     this.paintLineSegment(parallelogram.point3, parallelogram.point4);
   }
 
-  private paintCircle(circle: Circle): void {
+  paintCircle(circle: Circle): void {
     const fabricCircle: fabric.Circle = new fabric.Circle({
       ...circleSettings,
       left: circle.center.x,
