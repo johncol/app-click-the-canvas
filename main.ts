@@ -1,6 +1,8 @@
-import { take, tap } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
-import { Point, Parallelogram, Circle } from './src/domain';
+import { Point } from './src/domain/point';
+import { Parallelogram } from './src/domain/parallelogram';
+import { Circle } from './src/domain/circle';
 import { CanvasStore } from './src/service/canvas-store';
 import { Painter } from './src/service/painter';
 import { InfoBar } from './src/service/info-bar';
@@ -14,7 +16,7 @@ const app: AppService = new AppService(painter, infoBar);
 
 const userPoints: Point[] = [];
 painter.onCanvasClicked()
-  .pipe(take(3), tap(console.log))
+  .pipe(take(3))
   .subscribe({
     next: (point: Point) => {
       app.addPoint(point);
@@ -39,7 +41,7 @@ painter.onCanvasClicked()
             const pointToMove: Point = points[(index + 1) % points.length];
             pointToMove.updateTo(pointToMove.x - delta.x, pointToMove.y - delta.y, false);
             painter.movePoint(pointToMove);
-            setTimeout(() => painter.moveParallelogramLines(parallelogram), 5);
+            painter.moveParallelogramLines(parallelogram);
           }
         });
       });

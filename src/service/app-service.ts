@@ -1,6 +1,8 @@
 import { InfoBar } from './info-bar';
 import { Painter } from './painter';
-import { Point, Parallelogram, Circle } from '../domain';
+import { Point } from '../domain/point';
+import { Parallelogram } from '../domain/parallelogram';
+import { Circle } from '../domain/circle';
 
 export class AppService {
   constructor(

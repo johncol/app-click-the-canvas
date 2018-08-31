@@ -1,4 +1,4 @@
-import { Point } from '../domain';
+import { Point } from '../domain/point';
 
 export class InfoBar {
   private table: HTMLElement;
