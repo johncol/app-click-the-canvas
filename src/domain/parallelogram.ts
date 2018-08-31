@@ -1,7 +1,8 @@
 import { Point } from './point';
 import { Line } from './line';
+import { CanvasRepresentable } from './canvas-representable';
 
-export class Parallelogram {
+export class Parallelogram extends CanvasRepresentable {
 
   public readonly centerOfMass: Point = this.findCenterOfMass();
   public readonly area: number = this.calculateArea();
@@ -11,7 +12,9 @@ export class Parallelogram {
     public readonly point2: Point,
     public readonly point3: Point,
     public readonly point4: Point,
-  ) { }
+  ) {
+    super();
+  }
 
   static givenThreePoints(point1: Point, point2: Point, point3: Point): Parallelogram {
     const line1: Line = Line.givenPoints(point1, point2);

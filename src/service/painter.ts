@@ -21,16 +21,37 @@ export class Painter {
     this.updateDimensionOnWindowResize(this.canvas);
   }
 
-  paint(entity: Point | Parallelogram | Circle): void {
-    if (entity instanceof Point) {
-      this.paintPoint(entity);
-    }
-    if (entity instanceof Parallelogram) {
-      this.paintParallelogram(entity);
-    }
-    if (entity instanceof Circle) {
-      this.paintCircle(entity);
-    }
+  paintPoint(point: Point): void {
+    const canvasPoint: fabric.Circle = new fabric.Circle({
+      ...pointSettings,
+      left: point.x,
+      top: point.y,
+    });
+    point.saveRepresentation(canvasPoint);
+    canvasPoint.on('moved', (event: IEvent) => {
+      const mouseEvent: MouseEvent = event.e as MouseEvent;
+      point.updateTo(mouseEvent.x, mouseEvent.y)
+    });
+    this.addToCanvas(canvasPoint);
+  }
+
+  paintParallelogram(parallelogram: Parallelogram): void {
+    const linesList: fabric.Line[] = [];
+    linesList.push(this.paintLineSegment(parallelogram.point1, parallelogram.point2));
+    linesList.push(this.paintLineSegment(parallelogram.point1, parallelogram.point3));
+    linesList.push(this.paintLineSegment(parallelogram.point2, parallelogram.point4));
+    linesList.push(this.paintLineSegment(parallelogram.point3, parallelogram.point4));
+    parallelogram.saveRepresentation(linesList);
+  }
+
+  paintCircle(circle: Circle): void {
+    const fabricCircle: fabric.Circle = new fabric.Circle({
+      ...circleSettings,
+      left: circle.center.x,
+      top: circle.center.y,
+      radius: circle.radius,
+    });
+    this.addToCanvas(fabricCircle);
   }
 
   makePointsSelectable(): void {
@@ -42,19 +63,6 @@ export class Painter {
     this.canvas.renderAll();
   }
 
-  // TODO: should/could me removed
-  paintHelperLine(point1: Point, point2: Point, color: string = 'red'): void {
-    const coords: number[] = [point1.x, point1.y, point2.x, point2.y];
-    const line: fabric.Line = new fabric.Line(coords, {
-      fill: color,
-      stroke: color,
-      strokeWidth: 1,
-      hoverCursor: 'default',
-      selectable: false,
-    });
-    this.addToCanvas(line);
-  }
-
   onCanvasClicked(): Observable<Point> {
     return new Observable((observer) => {
       this.canvas.on('mouse:up', (event: IEvent) => {
@@ -64,37 +72,26 @@ export class Painter {
     });
   }
 
-  private paintPoint(point: Point): void {
-    const circle: fabric.Circle = new fabric.Circle({
-      ...pointSettings,
-      left: point.x,
+  movePoint(point: Point): void {
+    (point.representation as fabric.Circle).set({
       top: point.y,
+      left: point.x
+    }).bringToFront();
+    this.canvas.renderAll();
+  }
+
+  updateParallelogram(parallelogram: Parallelogram): void {
+    (parallelogram.representation as fabric.Object[]).forEach((object) => {
+      this.canvas.remove(object);
     });
-    this.store.addPoint(point, circle);
-    this.addToCanvas(circle);
+    this.paintParallelogram(parallelogram);
   }
 
-  private paintParallelogram(parallelogram: Parallelogram): void {
-    this.paintLineSegment(parallelogram.point1, parallelogram.point2);
-    this.paintLineSegment(parallelogram.point1, parallelogram.point3);
-    this.paintLineSegment(parallelogram.point2, parallelogram.point4);
-    this.paintLineSegment(parallelogram.point3, parallelogram.point4);
-  }
-
-  private paintCircle(circle: Circle): void {
-    const fabricCircle: fabric.Circle = new fabric.Circle({
-      ...circleSettings,
-      left: circle.center.x,
-      top: circle.center.y,
-      radius: circle.radius,
-    });
-    this.addToCanvas(fabricCircle);
-  }
-
-  private paintLineSegment(point1: Point, point2: Point): void {
+  private paintLineSegment(point1: Point, point2: Point): fabric.Line {
     const coords: number[] = [point1.x, point1.y, point2.x, point2.y];
     const line: fabric.Line = new fabric.Line(coords, { ...lineSettings });
     this.addToCanvas(line);
+    return line;
   }
 
   private addToCanvas(object: fabric.Object): void {
