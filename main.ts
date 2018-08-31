@@ -5,6 +5,7 @@ import { CanvasStore } from './src/service/canvas-store';
 import { Painter } from './src/service/painter';
 import { InfoBar } from './src/service/info-bar';
 import { AppService } from './src/service/app-service';
+import { Delta } from './src/domain/delta';
 
 const store: CanvasStore = new CanvasStore();
 const painter: Painter = new Painter('canvas', store);
@@ -31,5 +32,16 @@ painter.onCanvasClicked()
       painter.makePointsSelectable();
 
       const points: Point[] = parallelogram.points;
+
+      points.forEach((point, index) => {
+        point.whenMoved.subscribe({
+          next: (delta: Delta) => {
+            const pointToMove: Point = points[(index + 1) % points.length];
+            pointToMove.updateTo(pointToMove.x - delta.x, pointToMove.y - delta.y, false);
+            painter.movePoint(pointToMove);
+            setTimeout(() => painter.moveParallelogramLines(parallelogram), 5);
+          }
+        });
+      });
     },
   });

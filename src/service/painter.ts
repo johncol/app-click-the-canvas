@@ -7,7 +7,7 @@ import { CanvasStore } from './canvas-store';
 import { Point, Parallelogram, Circle } from '../domain';
 
 export class Painter {
-  public readonly canvas: fabric.Canvas;
+  public readonly canvas: Canvas;
   private readonly canvasProperties = {
     selection: false,
     backgroundColor: settings.color.white,
@@ -21,15 +21,6 @@ export class Painter {
     this.updateDimensionOnWindowResize(this.canvas);
   }
 
-  makePointsSelectable(): void {
-    this.store.forEachPoint((fabricPoint) => {
-      fabricPoint.selectable = true;
-      fabricPoint.hoverCursor = 'move';
-      fabricPoint.bringToFront();
-    });
-    this.canvas.renderAll();
-  }
-
   onCanvasClicked(): Observable<Point> {
     return new Observable((observer) => {
       this.canvas.on('mouse:up', (event: IEvent) => {
@@ -39,45 +30,81 @@ export class Painter {
     });
   }
 
-  paintPoint(point: Point): void {
-    const circle: fabric.Circle = new fabric.Circle({
+  paintPoint(point: Point): CanvasPoint {
+    const canvasPoint: CanvasPoint = new fabric.Circle({
       ...pointSettings,
       left: point.x,
       top: point.y,
     });
-    this.store.addPoint(point, circle);
-    this.addToCanvas(circle);
+    point.saveRepresentation(canvasPoint);
+    canvasPoint.on('moving', (event: IEvent) => {
+      const mouseEvent: MouseEvent = event.e as MouseEvent;
+      point.updateTo(mouseEvent.x, mouseEvent.y)
+    });
+    this.store.addPoint(point, canvasPoint);
+    this.addToCanvas(canvasPoint);
+    return canvasPoint;
   }
 
   paintParallelogram(parallelogram: Parallelogram): void {
-    this.paintLineSegment(parallelogram.point1, parallelogram.point2);
-    this.paintLineSegment(parallelogram.point1, parallelogram.point3);
-    this.paintLineSegment(parallelogram.point2, parallelogram.point4);
-    this.paintLineSegment(parallelogram.point3, parallelogram.point4);
+    const linesList: CanvasLine[] = [];
+    linesList.push(this.paintLineSegment(parallelogram.point1, parallelogram.point2));
+    linesList.push(this.paintLineSegment(parallelogram.point1, parallelogram.point3));
+    linesList.push(this.paintLineSegment(parallelogram.point2, parallelogram.point4));
+    linesList.push(this.paintLineSegment(parallelogram.point3, parallelogram.point4));
+    parallelogram.saveRepresentation(linesList);
   }
 
   paintCircle(circle: Circle): void {
-    const fabricCircle: fabric.Circle = new fabric.Circle({
+    const canvasCircle: CanvasCircle = new fabric.Circle({
       ...circleSettings,
       left: circle.center.x,
       top: circle.center.y,
       radius: circle.radius,
     });
-    this.addToCanvas(fabricCircle);
+    this.addToCanvas(canvasCircle);
+    canvasCircle.sendToBack();
   }
 
-  private paintLineSegment(point1: Point, point2: Point): void {
-    const coords: number[] = [point1.x, point1.y, point2.x, point2.y];
-    const line: fabric.Line = new fabric.Line(coords, { ...lineSettings });
-    this.addToCanvas(line);
+  movePoint(point: Point): void {
+    this.canvas.remove(point.representation as CanvasObject);
+    const canvasPoint: CanvasPoint = this.paintPoint(point);
+    this.makeSelectable(canvasPoint);
   }
 
-  private addToCanvas(object: fabric.Object): void {
-    this.canvas.add(object);
+  moveParallelogramLines(parallelogram: Parallelogram): void {
+    (parallelogram.representation as CanvasObject[]).forEach((object) => {
+      this.canvas.remove(object);
+    });
+    this.paintParallelogram(parallelogram);
+  }
+
+  makePointsSelectable(): void {
+    this.store.forEachPoint(fabricPoint => this.makeSelectable(fabricPoint));
     this.canvas.renderAll();
   }
 
-  private updateDimensionOnWindowResize(canvas: fabric.Canvas): void {
+  private paintLineSegment(point1: Point, point2: Point): CanvasLine {
+    const coords: number[] = [point1.x, point1.y, point2.x, point2.y];
+    const line: CanvasLine = new fabric.Line(coords, { ...lineSettings });
+    this.addToCanvas(line);
+    line.sendToBack();
+    return line;
+  }
+
+  private addToCanvas(element: CanvasObject): void {
+    this.canvas.add(element);
+    this.canvas.renderAll();
+  }
+
+  private makeSelectable(element: CanvasObject): void {
+    element.set({
+      selectable: true,
+      hoverCursor: 'move',
+    });
+  }
+
+  private updateDimensionOnWindowResize(canvas: Canvas): void {
     window.addEventListener('resize', () => {
       canvas.setDimensions({
         width: window.innerWidth,
