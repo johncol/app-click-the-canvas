@@ -93,13 +93,13 @@ export class Painter {
     return line;
   }
 
-  private addToCanvas(element: CanvasObject): void {
-    this.canvas.add(element);
+  private addToCanvas(object: CanvasObject): void {
+    this.canvas.add(object);
     this.canvas.renderAll();
   }
 
-  private makeSelectable(element: CanvasObject): void {
-    element.set({
+  private makeSelectable(object: CanvasObject): void {
+    object.set({
       selectable: true,
       hoverCursor: 'move',
     });
