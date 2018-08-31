@@ -3,7 +3,6 @@ import { fabric } from 'fabric';
 import { Observable } from 'rxjs';
 
 import { settings, fabricSettings } from './../config/settings';
-import { CanvasStore } from './canvas-store';
 import { Point } from '../domain/point';
 import { Parallelogram } from '../domain/parallelogram';
 import { Circle } from '../domain/circle';
@@ -17,7 +16,7 @@ export class Painter {
     width: window.innerWidth,
   };
 
-  constructor(canvasId: string, private readonly store: CanvasStore) {
+  constructor(canvasId: string) {
     this.canvas = new fabric.Canvas(canvasId, this.canvasProperties);
     this.configureCanvasAdditionalSettings();
     this.updateDimensionOnWindowResize(this.canvas);
@@ -43,7 +42,6 @@ export class Painter {
       const mouseEvent: MouseEvent = event.e as MouseEvent;
       point.updateTo(mouseEvent.x, mouseEvent.y)
     });
-    this.store.addPoint(point, canvasPoint);
     this.addToCanvas(canvasPoint);
     return canvasPoint;
   }
@@ -81,8 +79,9 @@ export class Painter {
     this.paintParallelogram(parallelogram);
   }
 
-  makePointsSelectable(): void {
-    this.store.forEachPoint(fabricPoint => this.makeSelectable(fabricPoint));
+  makePointsSelectable(points: Point[]): void {
+    points.map(point => point.representation as CanvasObject)
+      .forEach(this.makeSelectable);
     this.canvas.renderAll();
   }
 

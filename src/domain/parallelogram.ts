@@ -3,8 +3,6 @@ import { Point } from './point';
 import { Line } from './line';
 
 export class Parallelogram extends RepresentableInCanvas {
-  public readonly centerOfMass: Point = this.findCenterOfMass();
-  public readonly area: number = this.calculateArea();
 
   constructor(
     public readonly point1: Point,
@@ -28,13 +26,13 @@ export class Parallelogram extends RepresentableInCanvas {
     return [this.point1, this.point2, this.point4, this.point3];
   }
 
-  private findCenterOfMass(): Point {
+  get centerOfMass(): Point {
     const diagonal1: Line = Line.givenPoints(this.point1, this.point4);
     const diagonal2: Line = Line.givenPoints(this.point2, this.point3);
     return diagonal1.getIntersectionPointWith(diagonal2);
   }
 
-  private calculateArea(): number {
+  get area(): number {
     const bottom: Line = Line.givenPoints(this.point1, this.point2);
     const top: Line = Line.givenPoints(this.point3, this.point4);
     const perpendicularToBase: Line = bottom.getPerpendicularLineAtPoint(this.point1);

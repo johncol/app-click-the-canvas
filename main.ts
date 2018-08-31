@@ -3,14 +3,12 @@ import { take } from 'rxjs/operators';
 import { Point } from './src/domain/point';
 import { Parallelogram } from './src/domain/parallelogram';
 import { Circle } from './src/domain/circle';
-import { CanvasStore } from './src/service/canvas-store';
+import { Delta } from './src/domain/delta';
 import { Painter } from './src/service/painter';
 import { InfoBar } from './src/service/info-bar';
 import { AppService } from './src/service/app-service';
-import { Delta } from './src/domain/delta';
 
-const store: CanvasStore = new CanvasStore();
-const painter: Painter = new Painter('canvas', store);
+const painter: Painter = new Painter('canvas');
 const infoBar: InfoBar = new InfoBar('info-table');
 const app: AppService = new AppService(painter, infoBar);
 
@@ -31,9 +29,8 @@ painter.onCanvasClicked()
       app.addParallelogram(parallelogram);
       app.addCircle(circle);
 
-      painter.makePointsSelectable();
-
       const points: Point[] = parallelogram.points;
+      painter.makePointsSelectable(points);
 
       points.forEach((point, index) => {
         point.whenMoved.subscribe({
@@ -45,5 +42,5 @@ painter.onCanvasClicked()
           }
         });
       });
-    },
+    }
   });
