@@ -1,4 +1,4 @@
-import { Point } from '../domain/point';
+import { Point } from '../../domain/point';
 
 export class CanvasStore {
   private readonly points: Map<string, CanvasPoint> = new Map();

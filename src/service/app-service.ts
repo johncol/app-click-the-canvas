@@ -1,5 +1,5 @@
 import { InfoBar } from './info-bar/info-bar';
-import { Painter } from './painter';
+import { Painter } from './canvas/painter';
 import { Point } from '../domain/point';
 import { Parallelogram } from '../domain/parallelogram';
 import { Circle } from '../domain/circle';

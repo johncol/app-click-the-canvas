@@ -2,10 +2,10 @@ import { IEvent } from 'fabric/fabric-impl';
 import { fabric } from 'fabric';
 import { Observable } from 'rxjs';
 
-import { fabricSettings } from './../config/settings';
-import { Point } from '../domain/point';
-import { Parallelogram } from '../domain/parallelogram';
-import { Circle } from '../domain/circle';
+import { FABRIC_SETTINGS } from '../../config/fabric-settings';
+import { Point } from '../../domain/point';
+import { Parallelogram } from '../../domain/parallelogram';
+import { Circle } from '../../domain/circle';
 import { CanvasStore } from './canvas-store';
 
 export class Painter {
@@ -16,7 +16,7 @@ export class Painter {
     private readonly store: CanvasStore = new CanvasStore()
   ) {
     this.canvas = new fabric.Canvas(canvasId, {
-      ...fabricSettings.canvas,
+      ...FABRIC_SETTINGS.canvas,
       height: window.innerHeight,
       width: window.innerWidth,
     } as any);
@@ -35,7 +35,7 @@ export class Painter {
 
   paintPoint(point: Point): CanvasPoint {
     const canvasPoint: CanvasPoint = new fabric.Circle({
-      ...fabricSettings.point,
+      ...FABRIC_SETTINGS.point,
       left: point.x,
       top: point.y,
     });
@@ -59,7 +59,7 @@ export class Painter {
 
   paintCircle(circle: Circle): void {
     const canvasCircle: CanvasCircle = new fabric.Circle({
-      ...fabricSettings.circle,
+      ...FABRIC_SETTINGS.circle,
       left: circle.center.x,
       top: circle.center.y,
       radius: circle.radius,
@@ -102,7 +102,7 @@ export class Painter {
 
   private paintLineSegment(point1: Point, point2: Point): CanvasLine {
     const coords: number[] = [point1.x, point1.y, point2.x, point2.y];
-    const line: CanvasLine = new fabric.Line(coords, { ...fabricSettings.line });
+    const line: CanvasLine = new fabric.Line(coords, { ...FABRIC_SETTINGS.line });
     this.addToCanvas(line);
     line.sendToBack();
     return line;

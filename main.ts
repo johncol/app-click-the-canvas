@@ -4,7 +4,7 @@ import { Point } from './src/domain/point';
 import { Parallelogram } from './src/domain/parallelogram';
 import { Circle } from './src/domain/circle';
 import { Delta } from './src/domain/delta';
-import { Painter } from './src/service/painter';
+import { Painter } from './src/service/canvas/painter';
 import { InfoBar } from './src/service/info-bar/info-bar';
 import { AppService } from './src/service/app-service';
 
