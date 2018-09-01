@@ -1,4 +1,7 @@
 import { Point } from '../domain/point';
+import { Parallelogram } from '../domain/parallelogram';
+
+type InfoRow = HTMLElement;
 
 export class InfoBar {
   private table: HTMLElement;
@@ -7,23 +10,52 @@ export class InfoBar {
     this.table = document.getElementById(tableId) as HTMLElement;
   }
 
-  displayPointInfo(point: Point): void {
-    this.addRow(`Point ${this.table.children.length + 1}`, point);
+  public displayInfoFor(element: Point | Parallelogram): void {
+    if (element instanceof Point) {
+      this.displayPointInfo(element);
+    } else if (element instanceof Parallelogram) {
+      this.displayParallelogramInfo(element);
+    } else {
+      console.warn('Unknown element to display:', element);
+    }
   }
 
-  displayCenterOfMassInfo(centerOfMass: Point): void {
-    this.addRow('Center of mass', centerOfMass);
+  private displayPointInfo(point: Point): void {
+    const row: HTMLElement = this.addRow(`Point ${this.table.children.length + 1}`, point);
+    point.whenMoved.subscribe({
+      next: () => this.updateRow(row, point)
+    });
   }
 
-  displayAreaInfo(area: number): void {
-    this.addRow('Area', area.toFixed(1));
+  private displayParallelogramInfo(parallelogram: Parallelogram): void {
+    this.displayCenterOfMassInfo(parallelogram);
+    this.displayAreaInfo(parallelogram);
   }
 
-  private addRow(field: string, value: any): void {
+  private displayCenterOfMassInfo(parallelogram: Parallelogram): void {
+    const row: InfoRow = this.addRow('Center of mass', parallelogram.centerOfMass);
+    parallelogram.whenMoved.subscribe({
+      next: () => this.updateRow(row, parallelogram.centerOfMass)
+    });
+  }
+
+  private displayAreaInfo(parallelogram: Parallelogram): void {
+    const row: InfoRow = this.addRow('Area', parallelogram.area.toFixed(1));
+    parallelogram.whenMoved.subscribe({
+      next: () => this.updateRow(row, parallelogram.area.toFixed(0))
+    });
+  }
+
+  private addRow(field: string, value: any): HTMLElement {
     const th: HTMLElement = this.createElement('th', field);
     const td: HTMLElement = this.createElement('td', String(value));
     const tr: HTMLElement = this.createElementContaining('tr', [th, td]);
     this.table.appendChild(tr);
+    return tr;
+  }
+
+  private updateRow(row: InfoRow, value: any): void {
+    row.children.item(1).innerHTML = String(value);
   }
 
   private createElement(element: string, innerHtml: string): HTMLElement {

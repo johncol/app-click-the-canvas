@@ -1,9 +1,10 @@
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { Delta } from './delta';
 import { RepresentableInCanvas } from './representable-in-canvas';
 
 export class Point extends RepresentableInCanvas {
-  public readonly whenMoved: Subject<Delta> = new Subject();
+  private readonly _whenMoved: Subject<Delta> = new Subject();
+  public readonly whenMoved: Observable<Delta> = this._whenMoved.asObservable();
 
   constructor(
     public _x: number,
@@ -28,13 +29,13 @@ export class Point extends RepresentableInCanvas {
   updateTo(x: number, y: number, notify: boolean = true): void {
     if (notify) {
       const delta: Delta = new Delta(this.x - x, this.y - y);
-      this.whenMoved.next(delta);
+      this._whenMoved.next(delta);
     }
     this._x = x;
     this._y = y;
   }
 
   toString(): string {
-    return `(${this.x.toFixed(1)}, ${this.y.toFixed(1)})`;
+    return `(${this.x.toFixed(0)}, ${this.y.toFixed(0)})`;
   }
 }

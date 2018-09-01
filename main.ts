@@ -37,10 +37,10 @@ painter.onCanvasClicked()
           next: (delta: Delta) => {
             const pointToMove: Point = points[(index + 1) % points.length];
             pointToMove.updateTo(pointToMove.x - delta.x, pointToMove.y - delta.y, false);
+            circle.update(parallelogram.centerOfMass, Circle.getRadiusGivenArea(parallelogram.area));
+
             painter.movePoint(pointToMove);
             painter.moveParallelogram(parallelogram);
-
-            circle.update(parallelogram.centerOfMass, Circle.getRadiusGivenArea(parallelogram.area));
             painter.moveCircle(circle)
           }
         });
