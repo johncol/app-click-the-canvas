@@ -79,11 +79,13 @@ export class Painter {
   }
 
   moveCircle(circle: Circle): void {
-    (circle.representation as CanvasCircle).set({
-      radius: circle.radius,
-      top: circle.center.y,
-      left: circle.center.x,
-    });
+    if (!isNaN(circle.radius)) {
+      (circle.representation as CanvasCircle).set({
+        radius: circle.radius,
+        top: circle.center.y,
+        left: circle.center.x,
+      });
+    }
   }
 
   makePointsSelectable(points: Point[]): void {
