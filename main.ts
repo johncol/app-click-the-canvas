@@ -9,8 +9,13 @@ import { InfoBar } from './src/service/info-bar/info-bar';
 import { AppService } from './src/service/app-service';
 
 const painter: Painter = new Painter('canvas');
-const infoBar: InfoBar = new InfoBar('info-table');
+const infoBar: InfoBar = new InfoBar('info-bar');
 const app: AppService = new AppService(painter, infoBar);
+
+infoBar.onStartAgainClicked(() => {
+  // clean canvas
+  // listen again 3 points
+});
 
 const userPoints: Point[] = [];
 painter.onCanvasClicked()

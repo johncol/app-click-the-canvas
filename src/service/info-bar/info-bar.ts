@@ -3,13 +3,16 @@ import { Parallelogram } from '../../domain/parallelogram';
 import { RowStore } from './row-store';
 
 export class InfoBar {
-  private readonly table: HTMLElement;
+  private readonly table: HTMLTableElement;
+  private readonly button: HTMLButtonElement;
 
   constructor(
-    tableId: string,
+    barId: string,
     private readonly store: RowStore = new RowStore(),
   ) {
-    this.table = document.getElementById(tableId) as HTMLElement;
+    const barInfoElement: HTMLElement = document.getElementById(barId) as HTMLElement;
+    this.table = barInfoElement.getElementsByTagName('table').item(0);
+    this.button = barInfoElement.getElementsByTagName('button').item(0);
   }
 
   displayPointInfo(point: Point): void {
@@ -28,6 +31,11 @@ export class InfoBar {
   updatePointInfo(point: Point): void {
     const row: InfoRow = this.store.getRowForPoint(point);
     this.updateRowValue(row, point);
+  }
+
+  onStartAgainClicked(callback: (event: MouseEvent) => void): void {
+    this.button.disabled = false;
+    this.button.addEventListener('click', callback);
   }
 
   private displayCenterOfMassInfo(parallelogram: Parallelogram): void {
