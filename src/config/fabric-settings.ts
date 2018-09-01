@@ -30,5 +30,5 @@ export const FABRIC_SETTINGS = {
     selectable: false,
     hasControls: false,
     hasBorders: false,
-  }
+  },
 };

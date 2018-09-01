@@ -44,10 +44,10 @@ export class Parallelogram extends Updatable<Parallelogram> {
   }
 
   private notifyUpdateOnPointUpdate(): void {
-    this.points.forEach(point =>
-      point.whenUpdated(() =>
-        this.notifyUpdate(this)
-      )
-    );
+    this.points.forEach((point: Point) => {
+      point.whenUpdated(() => {
+        this.notifyUpdate(this);
+      });
+    });
   }
 }

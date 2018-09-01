@@ -15,9 +15,9 @@ export class InfoBar {
   displayPointInfo(point: Point): void {
     const row: InfoRow = this.addRow(`Point ${this.table.children.length + 1}`, point);
     this.store.savePointRow(point, row);
-    point.whenUpdated(() =>
-      this.updateRowValue(row, point)
-    );
+    point.whenUpdated(() => {
+      this.updateRowValue(row, point);
+    });
   }
 
   displayParallelogramInfo(parallelogram: Parallelogram): void {
@@ -32,16 +32,16 @@ export class InfoBar {
 
   private displayCenterOfMassInfo(parallelogram: Parallelogram): void {
     const row: InfoRow = this.addRow('Center of mass', parallelogram.centerOfMass);
-    parallelogram.whenUpdated(() =>
-      this.updateRowValue(row, parallelogram.centerOfMass)
-    );
+    parallelogram.whenUpdated(() => {
+      this.updateRowValue(row, parallelogram.centerOfMass);
+    });
   }
 
   private displayAreaInfo(parallelogram: Parallelogram): void {
     const row: InfoRow = this.addRow('Area', parallelogram.area.toFixed(0));
-    parallelogram.whenUpdated(() =>
-      this.updateRowValue(row, parallelogram.area.toFixed(0))
-    );
+    parallelogram.whenUpdated(() => {
+      this.updateRowValue(row, parallelogram.area.toFixed(0));
+    });
   }
 
   private addRow(field: string, value: any): InfoRow {

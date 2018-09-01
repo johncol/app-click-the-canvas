@@ -13,7 +13,7 @@ export class Painter {
 
   constructor(
     canvasId: string,
-    private readonly store: CanvasStore = new CanvasStore()
+    private readonly store: CanvasStore = new CanvasStore(),
   ) {
     this.canvas = new fabric.Canvas(canvasId, {
       ...FABRIC_SETTINGS.canvas,
@@ -41,7 +41,7 @@ export class Painter {
     });
     canvasPoint.on('moving', (event: IEvent) => {
       const mouseEvent: MouseEvent = event.e as MouseEvent;
-      point.updateTo(mouseEvent.x, mouseEvent.y)
+      point.updateTo(mouseEvent.x, mouseEvent.y);
     });
     this.addToCanvas(canvasPoint);
     this.store.storePoint(point, canvasPoint);
@@ -70,9 +70,9 @@ export class Painter {
   }
 
   movePoint(point: Point): void {
-    this.store.forCanvasPoint(point, canvasPoint => 
-      this.canvas.remove(canvasPoint)
-    );
+    this.store.forCanvasPoint(point, (canvasPoint: CanvasPoint) => {
+      this.canvas.remove(canvasPoint);
+    });
     const canvasPoint: CanvasPoint = this.paintPoint(point);
     this.makeSelectable(canvasPoint);
   }
@@ -84,7 +84,7 @@ export class Painter {
 
   moveCircle(circle: Circle): void {
     if (!isNaN(circle.radius)) {
-      this.store.forCircle(canvasCircle => {
+      this.store.forCircle((canvasCircle: CanvasCircle) => {
         canvasCircle.set({
           radius: circle.radius,
           top: circle.center.y,
@@ -95,9 +95,9 @@ export class Painter {
   }
 
   makePointsSelectable(): void {
-    this.store.forEachPoint(point =>
-      this.makeSelectable(point)
-    );
+    this.store.forEachPoint((point: CanvasPoint) => {
+      this.makeSelectable(point);
+    });
   }
 
   private paintLineSegment(point1: Point, point2: Point): CanvasLine {

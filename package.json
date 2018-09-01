@@ -4,7 +4,8 @@
   "description": "Toy application to draw parallelograms and generate circles",
   "main": "main.ts",
   "scripts": {
-    "start": "parcel index.html"
+    "start": "parcel index.html",
+    "tslint": "tslint -c tslint.json 'src/**/*.ts'"
   },
   "author": "John Cely",
   "license": "ISC",
