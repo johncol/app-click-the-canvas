@@ -21,10 +21,10 @@ export class InfoBar {
   }
 
   private displayPointInfo(point: Point): void {
-    const row: HTMLElement = this.addRow(`Point ${this.table.children.length + 1}`, point);
-    point.whenMoved.subscribe({
-      next: () => this.updateRow(row, point)
-    });
+    const row: InfoRow = this.addRow(`Point ${this.table.children.length + 1}`, point);
+    point.whenUpdated(() =>
+      this.updateRowValue(row, point)
+    );
   }
 
   private displayParallelogramInfo(parallelogram: Parallelogram): void {
@@ -34,27 +34,27 @@ export class InfoBar {
 
   private displayCenterOfMassInfo(parallelogram: Parallelogram): void {
     const row: InfoRow = this.addRow('Center of mass', parallelogram.centerOfMass);
-    parallelogram.whenMoved.subscribe({
-      next: () => this.updateRow(row, parallelogram.centerOfMass)
-    });
+    parallelogram.whenUpdated(() =>
+      this.updateRowValue(row, parallelogram.centerOfMass)
+    );
   }
 
   private displayAreaInfo(parallelogram: Parallelogram): void {
-    const row: InfoRow = this.addRow('Area', parallelogram.area.toFixed(1));
-    parallelogram.whenMoved.subscribe({
-      next: () => this.updateRow(row, parallelogram.area.toFixed(0))
-    });
+    const row: InfoRow = this.addRow('Area', parallelogram.area.toFixed(0));
+    parallelogram.whenUpdated(() =>
+      this.updateRowValue(row, parallelogram.area.toFixed(0))
+    );
   }
 
-  private addRow(field: string, value: any): HTMLElement {
+  private addRow(field: string, value: any): InfoRow {
     const th: HTMLElement = this.createElement('th', field);
     const td: HTMLElement = this.createElement('td', String(value));
-    const tr: HTMLElement = this.createElementContaining('tr', [th, td]);
+    const tr: InfoRow = this.createElementContaining('tr', [th, td]);
     this.table.appendChild(tr);
     return tr;
   }
 
-  private updateRow(row: InfoRow, value: any): void {
+  private updateRowValue(row: InfoRow, value: any): void {
     row.children.item(1).innerHTML = String(value);
   }
 

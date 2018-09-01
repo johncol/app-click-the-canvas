@@ -1,10 +1,8 @@
 import { Point } from './point';
 import { Line } from './line';
-import { Subject, Observable } from 'rxjs';
+import { Updatable } from './updatable';
 
-export class Parallelogram {
-  private readonly _whenMoved: Subject<Parallelogram> = new Subject();
-  public readonly whenMoved: Observable<Parallelogram> = this._whenMoved.asObservable();
+export class Parallelogram extends Updatable<Parallelogram> {
 
   constructor(
     public readonly point1: Point,
@@ -12,9 +10,8 @@ export class Parallelogram {
     public readonly point3: Point,
     public readonly point4: Point,
   ) {
-    this.points.forEach(point => point.whenMoved.subscribe({
-      next: () => this._whenMoved.next(this)
-    }));
+    super();
+    this.notifyUpdateOnPointUpdate();
   }
 
   static givenThreePoints(point1: Point, point2: Point, point3: Point): Parallelogram {
@@ -44,5 +41,13 @@ export class Parallelogram {
     const height: number = this.point1.getDistanceTo(perpendicularIntersectionPointWithTop);
     const base: number = this.point1.getDistanceTo(this.point2);
     return base * height;
+  }
+
+  private notifyUpdateOnPointUpdate(): void {
+    this.points.forEach(point =>
+      point.whenUpdated(() =>
+        this.notifyUpdate(this)
+      )
+    );
   }
 }

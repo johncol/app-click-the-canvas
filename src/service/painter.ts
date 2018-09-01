@@ -66,7 +66,6 @@ export class Painter {
     });
     this.addToCanvas(canvasCircle);
     canvasCircle.sendToBack();
-    // circle.saveRepresentation(canvasCircle);
     this.store.storeCircle(canvasCircle);
   }
 

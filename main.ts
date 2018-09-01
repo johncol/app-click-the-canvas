@@ -33,16 +33,14 @@ painter.onCanvasClicked()
       painter.makePointsSelectable();
 
       points.forEach((point, index) => {
-        point.whenMoved.subscribe({
-          next: (delta: Delta) => {
-            const pointToMove: Point = points[(index + 1) % points.length];
-            pointToMove.updateTo(pointToMove.x - delta.x, pointToMove.y - delta.y, false);
-            circle.update(parallelogram.centerOfMass, Circle.getRadiusGivenArea(parallelogram.area));
+        point.whenUpdated((delta: Delta) => {
+          const pointToMove: Point = points[(index + 1) % points.length];
+          pointToMove.updateTo(pointToMove.x - delta.x, pointToMove.y - delta.y, false);
+          circle.update(parallelogram.centerOfMass, Circle.getRadiusGivenArea(parallelogram.area));
 
-            painter.movePoint(pointToMove);
-            painter.moveParallelogram(parallelogram);
-            painter.moveCircle(circle)
-          }
+          painter.movePoint(pointToMove);
+          painter.moveParallelogram(parallelogram);
+          painter.moveCircle(circle)
         });
       });
     }
