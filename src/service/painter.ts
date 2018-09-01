@@ -2,24 +2,22 @@ import { IEvent } from 'fabric/fabric-impl';
 import { fabric } from 'fabric';
 import { Observable } from 'rxjs';
 
-import { settings, fabricSettings } from './../config/settings';
+import {  fabricSettings } from './../config/settings';
 import { Point } from '../domain/point';
 import { Parallelogram } from '../domain/parallelogram';
 import { Circle } from '../domain/circle';
 
 export class Painter {
   public readonly canvas: Canvas;
-  private readonly canvasProperties = {
-    selection: false,
-    backgroundColor: settings.color.white,
-    height: window.innerHeight,
-    width: window.innerWidth,
-  };
 
   constructor(canvasId: string) {
-    this.canvas = new fabric.Canvas(canvasId, this.canvasProperties);
+    this.canvas = new fabric.Canvas(canvasId, {
+      ...fabricSettings.canvas,
+      height: window.innerHeight,
+      width: window.innerWidth,
+    } as any);
     this.configureCanvasAdditionalSettings();
-    this.updateDimensionOnWindowResize(this.canvas);
+    this.updateCanvasDimensionOnWindowResize();
   }
 
   onCanvasClicked(): Observable<Point> {
@@ -64,6 +62,7 @@ export class Painter {
     });
     this.addToCanvas(canvasCircle);
     canvasCircle.sendToBack();
+    circle.saveRepresentation(canvasCircle);
   }
 
   movePoint(point: Point): void {
@@ -72,17 +71,24 @@ export class Painter {
     this.makeSelectable(canvasPoint);
   }
 
-  moveParallelogramLines(parallelogram: Parallelogram): void {
+  moveParallelogram(parallelogram: Parallelogram): void {
     (parallelogram.representation as CanvasObject[]).forEach((object) => {
       this.canvas.remove(object);
     });
     this.paintParallelogram(parallelogram);
   }
 
+  moveCircle(circle: Circle): void {
+    (circle.representation as CanvasCircle).set({
+      radius: circle.radius,
+      top: circle.center.y,
+      left: circle.center.x,
+    });
+  }
+
   makePointsSelectable(points: Point[]): void {
     points.map(point => point.representation as CanvasObject)
       .forEach(this.makeSelectable);
-    this.canvas.renderAll();
   }
 
   private paintLineSegment(point1: Point, point2: Point): CanvasLine {
@@ -95,7 +101,6 @@ export class Painter {
 
   private addToCanvas(object: CanvasObject): void {
     this.canvas.add(object);
-    this.canvas.renderAll();
   }
 
   private makeSelectable(object: CanvasObject): void {
@@ -105,9 +110,9 @@ export class Painter {
     });
   }
 
-  private updateDimensionOnWindowResize(canvas: Canvas): void {
+  private updateCanvasDimensionOnWindowResize(): void {
     window.addEventListener('resize', () => {
-      canvas.setDimensions({
+      this.canvas.setDimensions({
         width: window.innerWidth,
         height: window.innerHeight,
       });

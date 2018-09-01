@@ -13,6 +13,10 @@ export const settings = {
 };
 
 export const fabricSettings = {
+  canvas: {
+    selection: false,
+    backgroundColor: settings.color.white,
+  },
   point: {
     strokeWidth: 1,
     radius: settings.strokeWidth.point / 2,
