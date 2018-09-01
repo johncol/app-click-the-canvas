@@ -1,17 +1,16 @@
 import { Subject, Observable } from 'rxjs';
+import { RandomGenerator } from '../service/random-generator';
 import { Delta } from './delta';
-import { RepresentableInCanvas } from './representable-in-canvas';
 
-export class Point extends RepresentableInCanvas {
+export class Point {
   private readonly _whenMoved: Subject<Delta> = new Subject();
   public readonly whenMoved: Observable<Delta> = this._whenMoved.asObservable();
+  public readonly id: string = RandomGenerator.identifier();
 
   constructor(
     public _x: number,
     public _y: number,
-  ) {
-    super();
-  }
+  ) { }
 
   get x(): number { return this._x; }
   get y(): number { return this._y; }

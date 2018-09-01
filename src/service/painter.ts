@@ -2,15 +2,19 @@ import { IEvent } from 'fabric/fabric-impl';
 import { fabric } from 'fabric';
 import { Observable } from 'rxjs';
 
-import {  fabricSettings } from './../config/settings';
+import { fabricSettings } from './../config/settings';
 import { Point } from '../domain/point';
 import { Parallelogram } from '../domain/parallelogram';
 import { Circle } from '../domain/circle';
+import { CanvasStore } from './canvas-store';
 
 export class Painter {
   public readonly canvas: Canvas;
 
-  constructor(canvasId: string) {
+  constructor(
+    canvasId: string,
+    private readonly store: CanvasStore = new CanvasStore()
+  ) {
     this.canvas = new fabric.Canvas(canvasId, {
       ...fabricSettings.canvas,
       height: window.innerHeight,
@@ -35,22 +39,22 @@ export class Painter {
       left: point.x,
       top: point.y,
     });
-    point.saveRepresentation(canvasPoint);
     canvasPoint.on('moving', (event: IEvent) => {
       const mouseEvent: MouseEvent = event.e as MouseEvent;
       point.updateTo(mouseEvent.x, mouseEvent.y)
     });
     this.addToCanvas(canvasPoint);
+    this.store.storePoint(point, canvasPoint);
     return canvasPoint;
   }
 
   paintParallelogram(parallelogram: Parallelogram): void {
-    const linesList: CanvasLine[] = [];
-    linesList.push(this.paintLineSegment(parallelogram.point1, parallelogram.point2));
-    linesList.push(this.paintLineSegment(parallelogram.point1, parallelogram.point3));
-    linesList.push(this.paintLineSegment(parallelogram.point2, parallelogram.point4));
-    linesList.push(this.paintLineSegment(parallelogram.point3, parallelogram.point4));
-    parallelogram.saveRepresentation(linesList);
+    const lines: CanvasParallelogram = [];
+    lines.push(this.paintLineSegment(parallelogram.point1, parallelogram.point2));
+    lines.push(this.paintLineSegment(parallelogram.point1, parallelogram.point3));
+    lines.push(this.paintLineSegment(parallelogram.point2, parallelogram.point4));
+    lines.push(this.paintLineSegment(parallelogram.point3, parallelogram.point4));
+    this.store.storeParallelogram(lines);
   }
 
   paintCircle(circle: Circle): void {
@@ -62,35 +66,39 @@ export class Painter {
     });
     this.addToCanvas(canvasCircle);
     canvasCircle.sendToBack();
-    circle.saveRepresentation(canvasCircle);
+    // circle.saveRepresentation(canvasCircle);
+    this.store.storeCircle(canvasCircle);
   }
 
   movePoint(point: Point): void {
-    this.canvas.remove(point.representation as CanvasObject);
+    this.store.forCanvasPoint(point, canvasPoint => 
+      this.canvas.remove(canvasPoint)
+    );
     const canvasPoint: CanvasPoint = this.paintPoint(point);
     this.makeSelectable(canvasPoint);
   }
 
   moveParallelogram(parallelogram: Parallelogram): void {
-    (parallelogram.representation as CanvasObject[]).forEach((object) => {
-      this.canvas.remove(object);
-    });
+    this.store.forEachParallelogramLine(line => this.canvas.remove(line));
     this.paintParallelogram(parallelogram);
   }
 
   moveCircle(circle: Circle): void {
     if (!isNaN(circle.radius)) {
-      (circle.representation as CanvasCircle).set({
-        radius: circle.radius,
-        top: circle.center.y,
-        left: circle.center.x,
+      this.store.forCircle(canvasCircle => {
+        canvasCircle.set({
+          radius: circle.radius,
+          top: circle.center.y,
+          left: circle.center.x,
+        });
       });
     }
   }
 
-  makePointsSelectable(points: Point[]): void {
-    points.map(point => point.representation as CanvasObject)
-      .forEach(this.makeSelectable);
+  makePointsSelectable(): void {
+    this.store.forEachPoint(point =>
+      this.makeSelectable(point)
+    );
   }
 
   private paintLineSegment(point1: Point, point2: Point): CanvasLine {

@@ -30,7 +30,7 @@ painter.onCanvasClicked()
       app.addCircle(circle);
 
       const points: Point[] = parallelogram.points;
-      painter.makePointsSelectable(points);
+      painter.makePointsSelectable();
 
       points.forEach((point, index) => {
         point.whenMoved.subscribe({

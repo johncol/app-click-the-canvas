@@ -1,9 +1,8 @@
-import { RepresentableInCanvas } from './representable-in-canvas';
 import { Point } from './point';
 import { Line } from './line';
 import { Subject, Observable } from 'rxjs';
 
-export class Parallelogram extends RepresentableInCanvas {
+export class Parallelogram {
   private readonly _whenMoved: Subject<Parallelogram> = new Subject();
   public readonly whenMoved: Observable<Parallelogram> = this._whenMoved.asObservable();
 
@@ -13,7 +12,6 @@ export class Parallelogram extends RepresentableInCanvas {
     public readonly point3: Point,
     public readonly point4: Point,
   ) {
-    super();
     this.points.forEach(point => point.whenMoved.subscribe({
       next: () => this._whenMoved.next(this)
     }));

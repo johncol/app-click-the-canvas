@@ -1,14 +1,11 @@
 import { Point } from './point';
-import { RepresentableInCanvas } from './representable-in-canvas';
 
-export class Circle extends RepresentableInCanvas {
+export class Circle {
 
   constructor(
     public _center: Point,
     public _radius: number,
-  ) {
-    super();
-  }
+  ) { }
 
   static getRadiusGivenArea(circleArea: number): number {
     return Math.sqrt(circleArea / Math.PI);
