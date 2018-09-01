@@ -10,24 +10,14 @@ export class InfoBar {
     this.table = document.getElementById(tableId) as HTMLElement;
   }
 
-  public displayInfoFor(element: Point | Parallelogram): void {
-    if (element instanceof Point) {
-      this.displayPointInfo(element);
-    } else if (element instanceof Parallelogram) {
-      this.displayParallelogramInfo(element);
-    } else {
-      console.warn('Unknown element to display:', element);
-    }
-  }
-
-  private displayPointInfo(point: Point): void {
+  displayPointInfo(point: Point): void {
     const row: InfoRow = this.addRow(`Point ${this.table.children.length + 1}`, point);
     point.whenUpdated(() =>
       this.updateRowValue(row, point)
     );
   }
 
-  private displayParallelogramInfo(parallelogram: Parallelogram): void {
+  displayParallelogramInfo(parallelogram: Parallelogram): void {
     this.displayCenterOfMassInfo(parallelogram);
     this.displayAreaInfo(parallelogram);
   }

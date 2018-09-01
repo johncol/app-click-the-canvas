@@ -12,12 +12,12 @@ export class AppService {
 
   addPoint(point: Point): void {
     this.painter.paintPoint(point);
-    this.infoBar.displayInfoFor(point);
+    this.infoBar.displayPointInfo(point);
   }
 
   addParallelogram(parallelogram: Parallelogram): void {
     this.painter.paintParallelogram(parallelogram);
-    this.infoBar.displayInfoFor(parallelogram);
+    this.infoBar.displayParallelogramInfo(parallelogram);
   }
 
   addCircle(circle: Circle): void {
