@@ -1,0 +1,1 @@
+type InfoRow = HTMLElement;

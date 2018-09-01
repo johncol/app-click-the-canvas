@@ -1,17 +1,20 @@
-import { Point } from '../domain/point';
-import { Parallelogram } from '../domain/parallelogram';
-
-type InfoRow = HTMLElement;
+import { Point } from '../../domain/point';
+import { Parallelogram } from '../../domain/parallelogram';
+import { RowStore } from './row-store';
 
 export class InfoBar {
-  private table: HTMLElement;
+  private readonly table: HTMLElement;
 
-  constructor(tableId: string) {
+  constructor(
+    tableId: string,
+    private readonly store: RowStore = new RowStore(),
+  ) {
     this.table = document.getElementById(tableId) as HTMLElement;
   }
 
   displayPointInfo(point: Point): void {
     const row: InfoRow = this.addRow(`Point ${this.table.children.length + 1}`, point);
+    this.store.savePointRow(point, row);
     point.whenUpdated(() =>
       this.updateRowValue(row, point)
     );
@@ -20,6 +23,11 @@ export class InfoBar {
   displayParallelogramInfo(parallelogram: Parallelogram): void {
     this.displayCenterOfMassInfo(parallelogram);
     this.displayAreaInfo(parallelogram);
+  }
+
+  updatePointInfo(point: Point): void {
+    const row: InfoRow = this.store.getRowForPoint(point);
+    this.updateRowValue(row, point);
   }
 
   private displayCenterOfMassInfo(parallelogram: Parallelogram): void {

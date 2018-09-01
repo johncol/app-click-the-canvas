@@ -1,4 +1,4 @@
-import { InfoBar } from './info-bar';
+import { InfoBar } from './info-bar/info-bar';
 import { Painter } from './painter';
 import { Point } from '../domain/point';
 import { Parallelogram } from '../domain/parallelogram';

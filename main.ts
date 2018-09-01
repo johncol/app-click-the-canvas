@@ -5,7 +5,7 @@ import { Parallelogram } from './src/domain/parallelogram';
 import { Circle } from './src/domain/circle';
 import { Delta } from './src/domain/delta';
 import { Painter } from './src/service/painter';
-import { InfoBar } from './src/service/info-bar';
+import { InfoBar } from './src/service/info-bar/info-bar';
 import { AppService } from './src/service/app-service';
 
 const painter: Painter = new Painter('canvas');
@@ -36,6 +36,8 @@ painter.onCanvasClicked()
         point.whenUpdated((delta: Delta) => {
           const pointToMove: Point = points[(index + 1) % points.length];
           pointToMove.updateTo(pointToMove.x - delta.x, pointToMove.y - delta.y, false);
+          infoBar.updatePointInfo(pointToMove);
+
           circle.update(parallelogram.centerOfMass, Circle.getRadiusGivenArea(parallelogram.area));
 
           painter.movePoint(pointToMove);
