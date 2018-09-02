@@ -31,7 +31,13 @@ export class AppService {
         },
         error: (error: any) => console.warn(error),
         complete: () => {
-          this.parallelogram = Parallelogram.givenThreePoints(userPoints[0], userPoints[1], userPoints[2]);
+          try {
+            this.parallelogram = Parallelogram.givenThreePoints(userPoints[0], userPoints[1], userPoints[2]);
+          } catch (error) {
+            console.warn(error);
+            this.restart(true);
+            return;
+          }
           this.circle = new Circle(this.parallelogram.centerOfMass, Circle.getRadiusGivenArea(this.parallelogram.area));
 
           this.displayPoint(this.parallelogram.point4);
@@ -47,8 +53,8 @@ export class AppService {
       });
   }
 
-  restart(): void {
-    if (this.allowedToRestart) {
+  restart(force: boolean = false): void {
+    if (force || this.allowedToRestart) {
       this.clearAppState();
       this.init();
     }
