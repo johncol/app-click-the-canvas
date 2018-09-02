@@ -15,10 +15,6 @@ export class Point extends Updatable<Delta> {
   get x(): number { return this._x; }
   get y(): number { return this._y; }
 
-  isEqualTo(other: Point): boolean {
-    return this.x === other.x && this.y === other.y;
-  }
-
   getDistanceTo(otherPoint: Point): number {
     const deltaX: number = this.x - otherPoint.x;
     const deltaY: number = this.y - otherPoint.y;
