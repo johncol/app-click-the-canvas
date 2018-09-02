@@ -11,7 +11,7 @@ import { Updatable } from './domain/updatable';
 import { Dialog } from './service/dialog/dialog';
 import { InputValidator, ValidationResult } from './service/validator/input-validator';
 
-export class AppService {
+export class Application {
   private updatables: Updatable<any>[] = [];
   private circle: Circle;
   private parallelogram: Parallelogram;
