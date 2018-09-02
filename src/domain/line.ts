@@ -2,7 +2,7 @@ import { Point } from './point';
 
 export interface Line {
 
-  isParellelTo(otherLine: Line): boolean;
+  isParallelTo(otherLine: Line): boolean;
 
   isPerpendicularTo(otherLine: Line): boolean;
 

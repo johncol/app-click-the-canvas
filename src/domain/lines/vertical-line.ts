@@ -7,7 +7,7 @@ export class VerticalLine implements Line {
 
   constructor(public readonly x: number) { }
 
-  isParellelTo(otherLine: Line): boolean {
+  isParallelTo(otherLine: Line): boolean {
     return otherLine instanceof VerticalLine;
   }
 
@@ -16,7 +16,7 @@ export class VerticalLine implements Line {
   }
 
   getIntersectionPointWith(otherLine: Line): Point {
-    if (this.isParellelTo(otherLine)) {
+    if (this.isParallelTo(otherLine)) {
       throw new Error(`Lines are parallel so there is no intersection point (X=${this.x})`);
     }
     if (this.isPerpendicularTo(otherLine)) {

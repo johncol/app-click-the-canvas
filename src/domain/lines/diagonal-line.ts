@@ -8,7 +8,7 @@ export class DiagonalLine implements Line {
     public readonly b: number,
   ) { }
 
-  isParellelTo(otherLine: DiagonalLine): boolean {
+  isParallelTo(otherLine: DiagonalLine): boolean {
     return this.m === otherLine.m;
   }
 
