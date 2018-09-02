@@ -9,6 +9,7 @@ import { Circle } from './domain/circle';
 import { Delta } from './domain/delta';
 import { Updatable } from './domain/updatable';
 import { Dialog } from './service/dialog/dialog';
+import { InputValidator, ValidationResult } from './service/validator/input-validator';
 
 export class AppService {
   private updatables: Updatable<any>[] = [];
@@ -20,6 +21,7 @@ export class AppService {
     private readonly painter: Painter,
     private readonly infoBar: InfoBar,
     private readonly dialog: Dialog,
+    private readonly validator: InputValidator,
   ) { }
 
   init(): void {
@@ -33,26 +35,14 @@ export class AppService {
         },
         error: (error: any) => console.warn(error),
         complete: () => {
-          try {
-            this.pointsAreDifferentOrElseThrow(userPoints);
-            this.parallelogram = Parallelogram.givenThreePoints(userPoints[0], userPoints[1], userPoints[2]);
-          } catch (error) {
-            console.warn(error);
+          const state: ValidationResult = this.validator.parallelogramCanBeBuilt(userPoints);
+          if (state.valid) {
+            this.continueApplicationExecution(userPoints);
+          } else {
+            console.warn(state.error);
             this.dialog.show();
             this.restart(true);
-            return;
           }
-          this.circle = new Circle(this.parallelogram.centerOfMass, Circle.getRadiusGivenArea(this.parallelogram.area));
-
-          this.displayPoint(this.parallelogram.point4);
-          this.displayParallelogram(this.parallelogram);
-          this.displayCircle(this.circle);
-
-          this.subscribeToPointsUpdates();
-
-          this.painter.makePointsSelectable();
-          this.infoBar.enableStartAgainButton();
-          this.allowedToRestart = true;
         },
       });
   }
@@ -64,10 +54,19 @@ export class AppService {
     }
   }
 
-  private pointsAreDifferentOrElseThrow(userPoints: Point[]): void {
-    if (userPoints[0].isEqualTo(userPoints[1]) || userPoints[0].isEqualTo(userPoints[1])) {
-      throw new Error('Points cannot be the same');
-    }
+  private continueApplicationExecution(userPoints: Point[]) {
+    this.parallelogram = Parallelogram.givenThreePoints(userPoints[0], userPoints[1], userPoints[2]);
+    this.circle = new Circle(this.parallelogram.centerOfMass, Circle.getRadiusGivenArea(this.parallelogram.area));
+
+    this.displayPoint(this.parallelogram.point4);
+    this.displayParallelogram(this.parallelogram);
+    this.displayCircle(this.circle);
+
+    this.subscribeToPointsUpdates();
+
+    this.painter.makePointsSelectable();
+    this.infoBar.enableStartAgainButton();
+    this.allowedToRestart = true;
   }
 
   private displayPoint(point: Point): void {
