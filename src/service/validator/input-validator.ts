@@ -22,8 +22,12 @@ export class InputValidator {
   }
 
   private pointsAreDifferentOrElseThrow(userPoints: Point[]): void {
-    if (userPoints[0].isEqualTo(userPoints[1]) || userPoints[0].isEqualTo(userPoints[1])) {
-      throw new Error('Points cannot be the same');
+    for (let i = 0; i < userPoints.length; i++) {
+      for (let j = 0; j < userPoints.length; j++) {
+        if (i !== j && userPoints[i].isEqualTo(userPoints[j])) {
+          throw new Error('Points cannot be the same');
+        }
+      }
     }
   }
 
