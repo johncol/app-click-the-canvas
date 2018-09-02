@@ -17,7 +17,7 @@ export class HorizontalLine implements Line {
 
   getIntersectionPointWith(otherLine: Line): Point {
     if (this.isParellelTo(otherLine)) {
-      throw new Error(`Lines are parallel, there is no intersection point, Y=${this.y}`);
+      throw new Error(`Lines are parallel so there is no intersection point (Y=${this.y})`);
     }
     if (this.isPerpendicularTo(otherLine)) {
       return new Point((otherLine as VerticalLine).x, this.y);

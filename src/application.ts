@@ -8,6 +8,7 @@ import { Parallelogram } from './domain/parallelogram';
 import { Circle } from './domain/circle';
 import { Delta } from './domain/delta';
 import { Updatable } from './domain/updatable';
+import { Dialog } from './service/dialog/dialog';
 
 export class AppService {
   private updatables: Updatable<any>[] = [];
@@ -18,6 +19,7 @@ export class AppService {
   constructor(
     private readonly painter: Painter,
     private readonly infoBar: InfoBar,
+    private readonly dialog: Dialog,
   ) { }
 
   init(): void {
@@ -32,9 +34,11 @@ export class AppService {
         error: (error: any) => console.warn(error),
         complete: () => {
           try {
+            this.pointsAreDifferentOrElseThrow(userPoints);
             this.parallelogram = Parallelogram.givenThreePoints(userPoints[0], userPoints[1], userPoints[2]);
           } catch (error) {
             console.warn(error);
+            this.dialog.show();
             this.restart(true);
             return;
           }
@@ -57,6 +61,12 @@ export class AppService {
     if (force || this.allowedToRestart) {
       this.clearAppState();
       this.init();
+    }
+  }
+
+  private pointsAreDifferentOrElseThrow(userPoints: Point[]): void {
+    if (userPoints[0].isEqualTo(userPoints[1]) || userPoints[0].isEqualTo(userPoints[1])) {
+      throw new Error('Points cannot be the same');
     }
   }
 
