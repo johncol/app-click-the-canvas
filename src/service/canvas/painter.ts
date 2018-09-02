@@ -9,7 +9,7 @@ import { Circle } from '../../domain/circle';
 import { CanvasStore } from './canvas-store';
 
 export class Painter {
-  public readonly canvas: Canvas;
+  private readonly canvas: Canvas;
 
   constructor(
     canvasId: string,
@@ -98,6 +98,14 @@ export class Painter {
     this.store.forEachPoint((point: CanvasPoint) => {
       this.makeSelectable(point);
     });
+  }
+
+  clear(): void {
+    this.store.clear();
+    this.canvas.getObjects().forEach((object: CanvasObject) => {
+      this.canvas.remove(object);
+    });
+    this.canvas.renderAll();
   }
 
   private paintLineSegment(point1: Point, point2: Point): CanvasLine {

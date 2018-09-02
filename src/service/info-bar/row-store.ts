@@ -10,4 +10,8 @@ export class RowStore {
   getRowForPoint(point: Point): InfoRow {
     return this.pointRows.get(point.id) as InfoRow;
   }
+
+  clear(): void {
+    this.pointRows.clear();
+  }
 }

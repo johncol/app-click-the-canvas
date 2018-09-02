@@ -34,8 +34,17 @@ export class InfoBar {
   }
 
   onStartAgainClicked(callback: (event: MouseEvent) => void): void {
-    this.button.disabled = false;
     this.button.addEventListener('click', callback);
+  }
+
+  enableStartAgainButton(): void {
+    this.button.disabled = false;
+  }
+
+  clear(): void {
+    this.store.clear();
+    this.clearTable();
+    this.button.disabled = true;
   }
 
   private displayCenterOfMassInfo(parallelogram: Parallelogram): void {
@@ -74,5 +83,11 @@ export class InfoBar {
     const htmlElement: HTMLElement = document.createElement(element);
     children.forEach(child => htmlElement.appendChild(child));
     return htmlElement;
+  }
+
+  private clearTable(): void {
+    while (this.table.hasChildNodes()) {
+      this.table.removeChild(this.table.lastChild as Node);
+    }
   }
 }

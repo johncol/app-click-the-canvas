@@ -9,7 +9,7 @@ export abstract class Updatable<T> {
     this.subscriptions.push(subscription);
   }
 
-  private destroySubscriptions(): void {
+  public destroySubscriptions(): void {
     this.subscriptions.forEach((subscription: Subscription) => {
       subscription.unsubscribe();
     });
@@ -18,5 +18,4 @@ export abstract class Updatable<T> {
   protected notifyUpdate(value: T): void {
     this.updateSubject.next(value);
   }
-
 }

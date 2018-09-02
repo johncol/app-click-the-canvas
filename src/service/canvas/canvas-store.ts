@@ -33,4 +33,10 @@ export class CanvasStore {
     callback(this.circle);
   }
 
+  clear(): void {
+    this.points.clear();
+    this.parallelogram.splice(0, this.parallelogram.length);
+    this.circle = null as any;
+  }
+
 }

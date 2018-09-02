@@ -1,4 +1,4 @@
-import { RandomGenerator } from '../service/random-generator';
+import { RandomGenerator } from '../service/util/random-generator';
 import { Delta } from './delta';
 import { Updatable } from './updatable';
 
