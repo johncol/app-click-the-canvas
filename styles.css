@@ -128,3 +128,27 @@ dialog.open {
 dialog p + p {
   margin-top: 10px;
 }
+
+@media screen and (max-width: 600px) {
+  html {
+    --info-bar-height: 350px;
+  }
+
+  .info-bar {
+    min-width: 320px;
+    width: 100vw;
+    height: var(--info-bar-height);
+    top: calc(100vh - var(--info-bar-height));
+    left: 0;
+    font-size: 13px;
+  }
+
+  button {
+    width: auto;
+    right: var(--info-bar-padding);
+  }
+
+  tr > * {
+    padding: 10px 0;
+  }
+}
