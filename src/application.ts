@@ -9,6 +9,7 @@ import { Circle } from './domain/circle';
 import { Delta } from './domain/delta';
 import { Updatable } from './domain/updatable';
 import { Dialog } from './service/dialog/dialog';
+import { About } from './service/about/about';
 import { InputValidator, ValidationResult } from './service/validator/input-validator';
 
 export class Application {
@@ -21,6 +22,7 @@ export class Application {
     private readonly painter: Painter,
     private readonly infoBar: InfoBar,
     private readonly dialog: Dialog,
+    private readonly about: About,
     private readonly validator: InputValidator,
   ) { }
 

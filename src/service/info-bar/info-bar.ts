@@ -4,7 +4,8 @@ import { RowStore } from './row-store';
 
 export class InfoBar {
   private readonly table: HTMLTableElement;
-  private readonly button: HTMLButtonElement;
+  private readonly restartButton: HTMLButtonElement;
+  private readonly aboutButton: HTMLButtonElement;
 
   constructor(
     barId: string,
@@ -12,7 +13,9 @@ export class InfoBar {
   ) {
     const barInfoElement: HTMLElement = document.getElementById(barId) as HTMLElement;
     this.table = barInfoElement.getElementsByTagName('table').item(0);
-    this.button = barInfoElement.getElementsByTagName('button').item(0);
+    const buttons: NodeListOf<HTMLButtonElement> = barInfoElement.getElementsByTagName('button');
+    this.restartButton = buttons.item(0);
+    this.aboutButton = buttons.item(1);
   }
 
   displayPointInfo(point: Point): void {
@@ -34,17 +37,21 @@ export class InfoBar {
   }
 
   onStartAgainClicked(callback: (event: MouseEvent) => void): void {
-    this.button.addEventListener('click', callback);
+    this.restartButton.addEventListener('click', callback);
+  }
+  
+  enableStartAgainButton(): void {
+    this.restartButton.disabled = false;
   }
 
-  enableStartAgainButton(): void {
-    this.button.disabled = false;
+  onAboutClicked(callback: (event: MouseEvent) => void): void {
+    this.aboutButton.addEventListener('click', callback);
   }
 
   clear(): void {
     this.store.clear();
     this.clearTable();
-    this.button.disabled = true;
+    this.restartButton.disabled = true;
   }
 
   private displayCenterOfMassInfo(parallelogram: Parallelogram): void {

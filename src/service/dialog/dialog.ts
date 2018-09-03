@@ -1,11 +1,11 @@
 export class Dialog {
   private static readonly DEFAULT: string = 'The points you selected cannot be used to build a parallelogram';
-  
+
   private readonly dialog: HTMLDialogElement;
   private readonly message: HTMLElement;
 
-  constructor() {
-    this.dialog = document.getElementsByTagName('dialog')[0] as HTMLDialogElement;
+  constructor(dialogId: string) {
+    this.dialog = document.getElementById(dialogId) as HTMLDialogElement;
     this.message = this.dialog.children.item(0) as HTMLElement;
   }
 
