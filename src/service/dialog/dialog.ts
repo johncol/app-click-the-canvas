@@ -11,8 +11,12 @@ export class Dialog {
 
   show(error: Error = { message: Dialog.DEFAULT } as Error): void {
     this.message.innerHTML = error.message;
-    this.dialog.classList.toggle('open');
-    setTimeout(() => this.dialog.classList.toggle('open'), 3500);
+    this.toggleDialog();
+    setTimeout(this.toggleDialog, 3500);
+  }
+
+  private toggleDialog: () => void = (): void => {
+    this.dialog.classList.toggle('dialog--open');
   }
 
 }

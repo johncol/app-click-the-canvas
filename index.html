@@ -11,17 +11,22 @@
 </head>
 <body>
 
+
+  
   <main class="main">
     <canvas id="canvas"></canvas>
   </main>
 
   <aside class="info-bar" id="info-bar">
     <p>Select 3 points in the free area of the right and then move them around</p>
-    <button type="button" disabled>Start again</button>
+    <div class="info-bar__actions">
+      <button class="btn btn--main" disabled>Start again</button>
+      <button class="btn">About</button>
+    </div>
     <table></table>
   </aside>
 
-  <dialog open>
+  <dialog class="dialog" open>
     <p data-error-message></p>
     <p>Start again</p>
   </dialog>
