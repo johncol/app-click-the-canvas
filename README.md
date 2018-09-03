@@ -1,4 +1,6 @@
-# JavaScript assignment
+# Click the canvas app
+
+Give it a look in https://johncol.github.io/click-the-canvas/index.html.
 
 ## Shapes
 
