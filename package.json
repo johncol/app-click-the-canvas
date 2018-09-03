@@ -1,18 +1,20 @@
 {
-  "name": "doktor24-assignment",
+  "name": "click-the-canvas-app",
   "version": "1.0.0",
-  "description": "Toy application to draw parallelograms and generate circles",
+  "description": "Toy application to draw parallelograms",
   "main": "main.ts",
   "scripts": {
     "start": "parcel index.html",
+    "build": "parcel build index.html --no-source-maps",
     "tslint": "tslint -c tslint.json 'src/**/*.ts'"
   },
   "author": "John Cely",
   "license": "ISC",
   "devDependencies": {
+    "cssnano": "^4.1.0",
+    "parcel": "1.9.7",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.10.0",
-    "parcel": "1.9.7",
     "typescript": "^3.0.1"
   },
   "dependencies": {
