@@ -1,6 +1,6 @@
 # Click the canvas app
 
-Give it a look in https://johncol.github.io/click-the-canvas/index.html.
+Give it a look in https://johncol.github.io/app-click-the-canvas/index.html.
 
 ## Shapes
 
